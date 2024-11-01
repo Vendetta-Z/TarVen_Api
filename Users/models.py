@@ -8,6 +8,8 @@ class CustomUser(AbstractUser):
         default="Media/Users/avatar/DefaultAvatar.png",
         upload_to="Media/Users/avatar",
     )
+    private_mode = models.BooleanField(default=False)
+
 
     def __init__(self, *args: any, **kwargs: any) -> None:
         super().__init__(*args, **kwargs)
