@@ -9,7 +9,7 @@ from typing import Any
 
 def getUploadFileUrl(instance, filename):
     fileType = Posts.CheckTypeOfFile(filename)
-    upload_dir = f"Media/PostData/{instance.author.id}/{fileType}/"
+    upload_dir = f"Media/PostData/{instance.owner.id}/{fileType}/"
 
     if not os.path.isdir(upload_dir):
         os.makedirs(upload_dir)
@@ -44,3 +44,12 @@ class Posts(models.Model):
             return "image"
         else:
             return "unknown"
+        
+
+class Favorite(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorites_posts')
+    post = models.ForeignKey(Posts, on_delete=models.CASCADE, related_name='favorites')
+    created = models.DateTimeField(auto_created=True, auto_now=True)
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)

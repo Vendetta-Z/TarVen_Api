@@ -1,16 +1,19 @@
 from rest_framework import serializers
-from .models import Posts
+from .models import Posts, Favorite
 
 
 class PostsSerializer(serializers.ModelSerializer):
     """
     Сериализатор для публикаций 
     """
+    likes_count = serializers.IntegerField(read_only=True)
+    comments_count = serializers.IntegerField(read_only=True)
+    owner = serializers.ReadOnlyField(source='owner.username')
+
     class Meta:
         model = Posts
-        fields = ('owner', 'pk', 'title', 'description', 'created')
+        fields = ('owner', 'pk', 'title', 'PostFile', 'description', 'likes_count', 'comments_count', 'created')
 
-    owner = serializers.ReadOnlyField(source='owner.username')
 
     def create(self, validated_data):
         """
@@ -29,4 +32,16 @@ class PostsSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-        
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Favorite
+        fields = ('pk', 'owner', 'post', 'created')
+
+
+    def create(self, validated_data):
+        """
+        Создание публикации с полученными валидными данными 
+        """
+        return Favorite.objects.create(**validated_data)
