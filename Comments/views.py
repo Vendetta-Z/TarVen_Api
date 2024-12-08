@@ -1,11 +1,18 @@
 from rest_framework import generics, permissions
+<<<<<<< HEAD
 from django_filters.rest_framework import DjangoFilterBackend  # type: ignore
+=======
+from django_filters.rest_framework import DjangoFilterBackend # type: ignore
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
 
 from .permissions import IsOwnerOrReadOnly
 from .models import Comments
 from .serializers import CommentsSerializer
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
 class CommentsList(generics.ListCreateAPIView):
     """
     Представление для отображения и создания комментариев 
@@ -32,3 +39,7 @@ class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentsSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly]
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016

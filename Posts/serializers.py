@@ -6,6 +6,7 @@ class PostsSerializer(serializers.ModelSerializer):
     """
     Сериализатор для публикаций 
     """
+<<<<<<< HEAD
     likes_count = serializers.IntegerField(read_only=True, source='likes.count')
     comments_count = serializers.IntegerField(read_only=True, source='comments.count')
     owner = serializers.ReadOnlyField(source='owner.username')
@@ -24,6 +25,16 @@ class PostsSerializer(serializers.ModelSerializer):
             return obj.likes.filter(owner=user).exists()
         return False
     
+=======
+    likes_count = serializers.IntegerField(read_only=True)
+    comments_count = serializers.IntegerField(read_only=True)
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = Posts
+        fields = ('owner', 'pk', 'title', 'PostFile', 'description', 'likes_count', 'comments_count', 'created')
+
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
 
     def create(self, validated_data):
         """

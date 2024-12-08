@@ -50,6 +50,25 @@ class UserFeed(generics.ListAPIView):
     Представления для ленты публикации с сортировкой публикаций по лайкам
     """
     serializer_class = PostsSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
+    
+class PostComments(generics.ListAPIView):
+    """
+    Представления для получения всех комментариев конкретной публикации 
+    """
+    serializer_class = CommentsSerializer
+
+    def get_queryset(self):
+        post_id = self.kwargs['post_id']
+        return Comments.objects.filter(post=post_id).order_by('-created')
+
+
+class UserFeed(generics.ListAPIView):
+    """
+    Представления для ленты публикации с сортировкой публикаций по лайкам
+    """
+    serializer_class = PostsSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):

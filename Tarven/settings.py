@@ -28,6 +28,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
     'rest_framework',
     'rest_framework_simplejwt',
 

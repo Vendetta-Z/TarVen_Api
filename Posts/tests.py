@@ -60,12 +60,18 @@ class PostsTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Posts.objects.count(), 2)
+<<<<<<< HEAD
         self.assertEqual(Posts.objects.get(
             pk=response.data['pk']).title, 'testTittle')
         self.assertEqual(Posts.objects.get(
             pk=response.data['pk']).description, 'testDescription')
         self.assertEqual(Posts.objects.get(
             pk=response.data['pk']).owner.id, self.user.id)
+=======
+        self.assertEqual(Posts.objects.get(pk=response.data['pk']).title, 'testTittle')
+        self.assertEqual(Posts.objects.get(pk=response.data['pk']).description, 'testDescription')
+        self.assertEqual(Posts.objects.get(pk=response.data['pk']).owner.id, self.user.id)
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
 
     def test_postsList(self):
         """Тестиров получения списка публикаций  """
@@ -86,6 +92,7 @@ class PostsTests(APITestCase):
 
         self.assertEqual(Posts.objects.count(), 1)
         self.assertEqual(response.data['results'][0]['title'], 'testTittle')
+<<<<<<< HEAD
         self.assertEqual(response.data['results']
                          [0]['description'], 'testDescription')
         self.assertEqual(response.data['results']
@@ -95,6 +102,16 @@ class PostsTests(APITestCase):
         """Тестиров получения деталей публикаций  """
 
         # получаем токен пользователя
+=======
+        self.assertEqual(response.data['results'][0]['description'], 'testDescription')
+        self.assertEqual(response.data['results'][0]['owner'], self.user.username)
+
+    def test_postDetail(self):
+        """Тестиров получения деталей публикаций  """
+        
+        
+        #получаем токен пользователя 
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
                                     {
@@ -151,7 +168,11 @@ class PostsTests(APITestCase):
 
 
 class FavoritesTests(APITestCase):
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
     def setUp(self):
         self.user_data = {
             'username': 'testuser',
@@ -162,11 +183,19 @@ class FavoritesTests(APITestCase):
 
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
+<<<<<<< HEAD
                                     {
                                         'username': self.user.username,
                                         'password': 'testpassword123'
                                     })
 
+=======
+                        {
+                            'username': self.user.username,
+                            'password': 'testpassword123'
+                        })
+        
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
         token = response.data['access']
 
         newPostData = {
@@ -177,7 +206,11 @@ class FavoritesTests(APITestCase):
         }
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('posts-list')
+<<<<<<< HEAD
         response = self.client.post(url, newPostData)
+=======
+        response = self.client.post(url,newPostData)
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
 
         new_favorite_data = {
             'owner': self.user.id,
@@ -186,11 +219,16 @@ class FavoritesTests(APITestCase):
 
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('favorite-feed')
+<<<<<<< HEAD
         response = self.client.post(url, new_favorite_data)
+=======
+        response = self.client.post(url,new_favorite_data)
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
         self.favorite_pk = response.data['pk']
 
     def test_FavoritesList(self):
         """Тестирование получения списка сохраненных публикаций  """
+<<<<<<< HEAD
         # получаем токен пользователя
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
@@ -202,6 +240,19 @@ class FavoritesTests(APITestCase):
         token = response.data['access']
 
         # Проверяем эндпоинт списка сохраненных публикаций , должен вернуть список сохраненных публикаций
+=======
+        #получаем токен пользователя 
+        url = reverse('token_obtain_pair')
+        response = self.client.post(url,
+                        {
+                            'username': self.user.username,
+                            'password': 'testpassword123'
+                        })
+        
+        token = response.data['access']
+
+        #Проверяем эндпоинт списка сохраненных публикаций , должен вернуть список сохраненных публикаций 
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('favorite-feed')
         response = self.client.get(url)
@@ -209,17 +260,29 @@ class FavoritesTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Posts.objects.count(), 1)
         self.assertEqual(Favorite.objects.get(pk=self.favorite_pk).post.id, 1)
+<<<<<<< HEAD
         self.assertEqual(Favorite.objects.get(
             pk=self.favorite_pk).owner.id, self.user.id)
+=======
+        self.assertEqual(Favorite.objects.get(pk=self.favorite_pk).owner.id, self.user.id)
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
 
     def test_FavoriteCreate(self):
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
+<<<<<<< HEAD
                                     {
                                         'username': self.user.username,
                                         'password': 'testpassword123'
                                     })
 
+=======
+                        {
+                            'username': self.user.username,
+                            'password': 'testpassword123'
+                        })
+        
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
         token = response.data['access']
 
         new_favorite_data = {
@@ -229,6 +292,7 @@ class FavoritesTests(APITestCase):
 
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('favorite-feed')
+<<<<<<< HEAD
         response = self.client.post(url, new_favorite_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Favorite.objects.count(), 2)
@@ -236,20 +300,43 @@ class FavoritesTests(APITestCase):
             pk=response.data['pk']).post.id, 1)
         self.assertEqual(Favorite.objects.get(
             pk=response.data['pk']).owner.id, self.user.id)
+=======
+        response = self.client.post(url,new_favorite_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Favorite.objects.count(), 2)
+        self.assertEqual(Favorite.objects.get(pk=response.data['pk']).post.id, 1)
+        self.assertEqual(Favorite.objects.get(pk=response.data['pk']).owner.id, self.user.id)
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
 
     def test_FavoriteDelete(self):
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
+<<<<<<< HEAD
                                     {
                                         'username': self.user.username,
                                         'password': 'testpassword123'
                                     })
 
+=======
+                        {
+                            'username': self.user.username,
+                            'password': 'testpassword123'
+                        })
+        
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
         token = response.data['access']
 
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('favorite-detail', args=[self.favorite_pk])
         response = self.client.delete(url)
+<<<<<<< HEAD
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Posts.objects.count(), 1)
+=======
+    
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Posts.objects.count(), 1)
+    
+    
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016

@@ -29,8 +29,13 @@ urlpatterns = [
     path('Posts/', include('Posts.urls')),
     path('Likes/', include('Likes.urls')),
     path('Users/', include('Users.urls')),
+<<<<<<< HEAD
     path('conversations/', include('Chats.urls')),
     path('Comments/', include('Comments.urls'))
+=======
+    path('Comments/', include('Comments.urls')),
+
+>>>>>>> 6bdf08eaeb1a1038a20e46d95d4b76ec124db016
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
