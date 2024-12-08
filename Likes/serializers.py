@@ -18,8 +18,8 @@ class LikesSerializer(serializers.ModelSerializer):
         """
         return Likes.objects.create(**validated_data)
 
-    def delete(self, like_id ):
+    def delete(self, like_id):
         """
         Удаления объекта класса Likes
         """
-        return Likes.objects.delete( id = like_id)
+        return Likes.objects.delete(id=like_id)

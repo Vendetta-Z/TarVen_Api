@@ -1,9 +1,10 @@
 from rest_framework import generics, permissions
-from django_filters.rest_framework import DjangoFilterBackend # type: ignore
+from django_filters.rest_framework import DjangoFilterBackend  # type: ignore
 
 from .permissions import IsOwnerOrReadOnly
 from .models import Comments
 from .serializers import CommentsSerializer
+
 
 class CommentsList(generics.ListCreateAPIView):
     """
@@ -31,4 +32,3 @@ class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentsSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly]
-    

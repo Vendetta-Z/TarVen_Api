@@ -28,7 +28,8 @@ class PostsDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Представления для получения данных конкретной публикации и их изменения 
     """
-    queryset = Posts.objects.all()
+
+    queryset = Posts.objects.prefetch_related('likes', 'comments')
     serializer_class = PostsSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly]

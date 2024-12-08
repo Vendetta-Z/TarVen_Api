@@ -6,14 +6,24 @@ class PostsSerializer(serializers.ModelSerializer):
     """
     Сериализатор для публикаций 
     """
-    likes_count = serializers.IntegerField(read_only=True)
-    comments_count = serializers.IntegerField(read_only=True)
+    likes_count = serializers.IntegerField(read_only=True, source='likes.count')
+    comments_count = serializers.IntegerField(read_only=True, source='comments.count')
     owner = serializers.ReadOnlyField(source='owner.username')
+    isliked = serializers.SerializerMethodField()
 
     class Meta:
         model = Posts
-        fields = ('owner', 'pk', 'title', 'PostFile', 'description', 'likes_count', 'comments_count', 'created')
+        fields = ('owner', 'pk', 'title', 'PostFile', 'description', 'likes_count', 
+                  'isliked', 'comments_count', 'created')
 
+    def get_isliked(self, obj):
+        """Проверяет, лайкнул ли текущий пользователь пост"""
+        user = self.context['request'].user
+
+        if user.is_authenticated:
+            return obj.likes.filter(owner=user).exists()
+        return False
+    
 
     def create(self, validated_data):
         """

@@ -7,7 +7,7 @@ from Users.models import CustomUser
 from .models import Comments
 
 
-class LikesTests(APITestCase):
+class like_tests(APITestCase):
 
     def setUp(self):
         self.user_data = {
@@ -19,11 +19,11 @@ class LikesTests(APITestCase):
 
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
-                        {
-                            'username': self.user.username,
-                            'password': 'testpassword123'
-                        })
-        
+                                    {
+                                        'username': self.user.username,
+                                        'password': 'testpassword123'
+                                    })
+
         token = response.data['access']
 
         newPostData = {
@@ -34,9 +34,8 @@ class LikesTests(APITestCase):
         }
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('posts-list')
-        response = self.client.post(url,newPostData)
+        response = self.client.post(url, newPostData)
         self.post_pk = response.data['pk']
-
 
         newCommentData = {
             "author": self.user.id,
@@ -45,71 +44,68 @@ class LikesTests(APITestCase):
         }
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('comments-list', args=[self.post_pk])
-        response = self.client.post(url,newCommentData)
+        response = self.client.post(url, newCommentData)
         self.comment_pk = response.data['pk']
 
     def test_Like_Create(self):
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
-                        {
-                            'username': self.user.username,
-                            'password': 'testpassword123'
-                        })
-        
+                                    {
+                                        'username': self.user.username,
+                                        'password': 'testpassword123'
+                                    })
+
         token = response.data['access']
 
-        newCommentData = {
+        new_comment_data = {
             "author": self.user.id,
             "text": "Comment text",
             "post": self.post_pk
         }
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('comments-list', args=[self.post_pk])
-        response = self.client.post(url,newCommentData)
-        
+        response = self.client.post(url, new_comment_data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Comments.objects.count(), 2)
-        self.assertEqual(Comments.objects.get(pk=response.data['pk']).post.id, self.post_pk)
-        self.assertEqual(Comments.objects.get(pk=response.data['pk']).author.id, self.user.id)
+        self.assertEqual(Comments.objects.get(
+            pk=response.data['pk']).post.id, self.post_pk)
+        self.assertEqual(Comments.objects.get(
+            pk=response.data['pk']).author.id, self.user.id)
 
     def test_postUpdate(self):
-            """Тестиров изменения деталей комментария  """
+        """Тестиров изменения деталей комментария  """
 
-            #получаем токен пользователя 
-            url = reverse('token_obtain_pair')
-            response = self.client.post(url,
-                            {
-                                'username': self.user.username,
-                                'password': 'testpassword123'
-                            })
-            
-            token = response.data['access']
-            url = reverse('comments-detail', args=[self.comment_pk])
-            updatedCommentData = {
-                "author": self.user.id,
-                "text": "updated Comment text",
-                "post": self.post_pk
-            }
-            response = self.client.put(url, updatedCommentData)
-            self.assertEqual(response.data['post'], self.post_pk)
-            self.assertEqual(response.data['text'], "updated Comment text")
-            self.assertEqual(response.data['author'], self.user.username)
-
-    def test_Likes_Delete(self):
+        # получаем токен пользователя
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
-                        {
-                            'username': self.user.username,
-                            'password': 'testpassword123'
-                        })
-        
+                                    {
+                                        'username': self.user.username,
+                                        'password': 'testpassword123'
+                                    })
+
+        url = reverse('comments-detail', args=[self.comment_pk])
+        updated_comment_data = {
+            "author": self.user.id,
+            "text": "updated Comment text",
+            "post": self.post_pk
+        }
+        response = self.client.put(url, updated_comment_data)
+        self.assertEqual(response.data['post'], self.post_pk)
+        self.assertEqual(response.data['text'], "updated Comment text")
+        self.assertEqual(response.data['author'], self.user.username)
+
+    def test_likes_delete(self):
+        url = reverse('token_obtain_pair')
+        response = self.client.post(url,
+                                    {
+                                        'username': self.user.username,
+                                        'password': 'testpassword123'
+                                    })
         token = response.data['access']
 
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('comments-detail', args=[self.comment_pk])
         response = self.client.delete(url)
-    
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Comments.objects.count(), 0)
-    

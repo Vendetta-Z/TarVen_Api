@@ -1,5 +1,7 @@
 from pathlib import Path
 import Tarven.secret as secret
+import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -30,7 +32,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
 
     'corsheaders',
-    
+
     'Posts.apps.PostsConfig',
     'Users.apps.UsersConfig',
     'Comments.apps.CommentsConfig',
@@ -51,8 +53,9 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",  # Если ваш фронтенд работает на этом порту
-    "https://example.com",     # Добавьте другие источники по мере необходимости
+    "http://localhost:8001",     # Добавьте другие источники по мере необходимости
 ]
+
 
 CORS_ALLOW_METHODS = [
     "GET",
@@ -90,7 +93,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Tarven.wsgi.application'
 ASGI_APPLICATION = 'Tarven.asgi.application'
 
-CHANNEL_LAYERS = {'default':{'BACKEND': "channels.layers.InMemoryChannelLayer"}}
+CHANNEL_LAYERS = {'default': {
+    'BACKEND': "channels.layers.InMemoryChannelLayer"}}
 
 
 REST_FRAMEWORK = {
@@ -108,11 +112,14 @@ REST_FRAMEWORK = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',  # Используем PostgreSQL
+        'NAME': 'TarvenDB',  # Имя базы данных
+        'USER': 'postgres',  # Имя пользователя
+        'PASSWORD': 'Vendetta_Z01',  # Пароль пользователя
+        'HOST': 'localhost',  # Хост базы данных
+        'PORT': '5432',  # Порт PostgreSQL (по умолчанию 5432)
     }
 }
-
 
 
 # Password validation
@@ -145,6 +152,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+
+MEDIA_URL = '/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'Media')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/

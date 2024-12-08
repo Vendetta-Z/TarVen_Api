@@ -3,8 +3,13 @@ from rest_framework import serializers, status
 
 from .models import CustomUser
 
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    posts = serializers.HyperlinkedIdentityField(many=True, view_name='post-detail',  read_only=True)
+    posts = serializers.HyperlinkedIdentityField(
+        many=True,
+        view_name='post-detail',
+        read_only=True
+    )
 
     class Meta:
         model = CustomUser
@@ -25,7 +30,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('username', 'password', 'email')
-        
 
     def create(self, validated_data):
         """
@@ -38,8 +42,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])  # Хеширование пароля
         user.save()
         return user
-    
+
     def validate_email(self, value):
         if CustomUser.objects.filter(email=value).exists():
-            raise serializers.ValidationError("Пользователь с таким адресом электронной почты уже существует.")
+            raise serializers.ValidationError(
+                "Пользователь с таким адресом электронной почты уже существует.")
         return value

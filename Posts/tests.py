@@ -6,6 +6,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from .models import Posts, Favorite
 from Users.models import CustomUser
 
+
 class PostsTests(APITestCase):
 
     def setUp(self):
@@ -18,11 +19,11 @@ class PostsTests(APITestCase):
 
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
-                        {
-                            'username': self.user.username,
-                            'password': 'testpassword123'
-                        })
-        
+                                    {
+                                        'username': self.user.username,
+                                        'password': 'testpassword123'
+                                    })
+
         token = response.data['access']
 
         newPostData = {
@@ -33,18 +34,18 @@ class PostsTests(APITestCase):
         }
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('posts-list')
-        response = self.client.post(url,newPostData)
+        response = self.client.post(url, newPostData)
         self.post_pk = response.data['pk']
 
     def test_postCreate(self):
         """Тестирование создания новой публикации  """
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
-                        {
-                            'username': self.user.username,
-                            'password': 'testpassword123'
-                        })
-        
+                                    {
+                                        'username': self.user.username,
+                                        'password': 'testpassword123'
+                                    })
+
         token = response.data['access']
 
         newPostData = {
@@ -55,49 +56,52 @@ class PostsTests(APITestCase):
         }
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('posts-list')
-        response = self.client.post(url,newPostData)
+        response = self.client.post(url, newPostData)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Posts.objects.count(), 2)
-        self.assertEqual(Posts.objects.get(pk=response.data['pk']).title, 'testTittle')
-        self.assertEqual(Posts.objects.get(pk=response.data['pk']).description, 'testDescription')
-        self.assertEqual(Posts.objects.get(pk=response.data['pk']).owner.id, self.user.id)
+        self.assertEqual(Posts.objects.get(
+            pk=response.data['pk']).title, 'testTittle')
+        self.assertEqual(Posts.objects.get(
+            pk=response.data['pk']).description, 'testDescription')
+        self.assertEqual(Posts.objects.get(
+            pk=response.data['pk']).owner.id, self.user.id)
 
     def test_postsList(self):
         """Тестиров получения списка публикаций  """
-        #получаем токен пользователя 
+        # получаем токен пользователя
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
-                        {
-                            'username': self.user.username,
-                            'password': 'testpassword123'
-                        })
-        
+                                    {
+                                        'username': self.user.username,
+                                        'password': 'testpassword123'
+                                    })
+
         token = response.data['access']
 
-        #Проверяем эндпоинт списка публикаций , должен вернуть список всех публикаций 
+        # Проверяем эндпоинт списка публикаций , должен вернуть список всех публикаций
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('posts-list')
         response = self.client.get(url)
 
         self.assertEqual(Posts.objects.count(), 1)
         self.assertEqual(response.data['results'][0]['title'], 'testTittle')
-        self.assertEqual(response.data['results'][0]['description'], 'testDescription')
-        self.assertEqual(response.data['results'][0]['owner'], self.user.username)
+        self.assertEqual(response.data['results']
+                         [0]['description'], 'testDescription')
+        self.assertEqual(response.data['results']
+                         [0]['owner'], self.user.username)
 
     def test_postDetail(self):
         """Тестиров получения деталей публикаций  """
-        
-        
-        #получаем токен пользователя 
+
+        # получаем токен пользователя
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
-                        {
-                            'username': self.user.username,
-                            'password': 'testpassword123'
-                        })
-        
-        token = response.data['access']
+                                    {
+                                        'username': self.user.username,
+                                        'password': 'testpassword123'
+                                    })
+
         url = reverse('post-detail', args=[self.post_pk])
         response = self.client.get(url)
 
@@ -110,15 +114,14 @@ class PostsTests(APITestCase):
     def test_postUpdate(self):
         """Тестиров изменения деталей публикаций  """
 
-        #получаем токен пользователя 
+        # получаем токен пользователя
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
-                        {
-                            'username': self.user.username,
-                            'password': 'testpassword123'
-                        })
-        
-        token = response.data['access']
+                                    {
+                                        'username': self.user.username,
+                                        'password': 'testpassword123'
+                                    })
+
         url = reverse('post-detail', args=[self.post_pk])
         updatedPostData = {
             "description": "updatedDescription",
@@ -132,15 +135,13 @@ class PostsTests(APITestCase):
 
     def test_postDestroy(self):
         """Тестирование удаления публикации   """
-        
+
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
-                        {
-                            'username': self.user.username,
-                            'password': 'testpassword123'
-                        })
-        
-        token = response.data['access']
+                                    {
+                                        'username': self.user.username,
+                                        'password': 'testpassword123'
+                                    })
 
         url = reverse('post-detail', args=[self.post_pk])
         response = self.client.delete(url)
@@ -150,7 +151,7 @@ class PostsTests(APITestCase):
 
 
 class FavoritesTests(APITestCase):
-    
+
     def setUp(self):
         self.user_data = {
             'username': 'testuser',
@@ -161,11 +162,11 @@ class FavoritesTests(APITestCase):
 
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
-                        {
-                            'username': self.user.username,
-                            'password': 'testpassword123'
-                        })
-        
+                                    {
+                                        'username': self.user.username,
+                                        'password': 'testpassword123'
+                                    })
+
         token = response.data['access']
 
         newPostData = {
@@ -176,7 +177,7 @@ class FavoritesTests(APITestCase):
         }
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('posts-list')
-        response = self.client.post(url,newPostData)
+        response = self.client.post(url, newPostData)
 
         new_favorite_data = {
             'owner': self.user.id,
@@ -185,22 +186,22 @@ class FavoritesTests(APITestCase):
 
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('favorite-feed')
-        response = self.client.post(url,new_favorite_data)
+        response = self.client.post(url, new_favorite_data)
         self.favorite_pk = response.data['pk']
 
     def test_FavoritesList(self):
         """Тестирование получения списка сохраненных публикаций  """
-        #получаем токен пользователя 
+        # получаем токен пользователя
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
-                        {
-                            'username': self.user.username,
-                            'password': 'testpassword123'
-                        })
-        
+                                    {
+                                        'username': self.user.username,
+                                        'password': 'testpassword123'
+                                    })
+
         token = response.data['access']
 
-        #Проверяем эндпоинт списка сохраненных публикаций , должен вернуть список сохраненных публикаций 
+        # Проверяем эндпоинт списка сохраненных публикаций , должен вернуть список сохраненных публикаций
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('favorite-feed')
         response = self.client.get(url)
@@ -208,16 +209,17 @@ class FavoritesTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Posts.objects.count(), 1)
         self.assertEqual(Favorite.objects.get(pk=self.favorite_pk).post.id, 1)
-        self.assertEqual(Favorite.objects.get(pk=self.favorite_pk).owner.id, self.user.id)
+        self.assertEqual(Favorite.objects.get(
+            pk=self.favorite_pk).owner.id, self.user.id)
 
     def test_FavoriteCreate(self):
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
-                        {
-                            'username': self.user.username,
-                            'password': 'testpassword123'
-                        })
-        
+                                    {
+                                        'username': self.user.username,
+                                        'password': 'testpassword123'
+                                    })
+
         token = response.data['access']
 
         new_favorite_data = {
@@ -227,27 +229,27 @@ class FavoritesTests(APITestCase):
 
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('favorite-feed')
-        response = self.client.post(url,new_favorite_data)
+        response = self.client.post(url, new_favorite_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Favorite.objects.count(), 2)
-        self.assertEqual(Favorite.objects.get(pk=response.data['pk']).post.id, 1)
-        self.assertEqual(Favorite.objects.get(pk=response.data['pk']).owner.id, self.user.id)
+        self.assertEqual(Favorite.objects.get(
+            pk=response.data['pk']).post.id, 1)
+        self.assertEqual(Favorite.objects.get(
+            pk=response.data['pk']).owner.id, self.user.id)
 
     def test_FavoriteDelete(self):
         url = reverse('token_obtain_pair')
         response = self.client.post(url,
-                        {
-                            'username': self.user.username,
-                            'password': 'testpassword123'
-                        })
-        
+                                    {
+                                        'username': self.user.username,
+                                        'password': 'testpassword123'
+                                    })
+
         token = response.data['access']
 
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('favorite-detail', args=[self.favorite_pk])
         response = self.client.delete(url)
-    
+
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Posts.objects.count(), 1)
-    
-    
